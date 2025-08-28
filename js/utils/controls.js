@@ -1,10 +1,10 @@
 const controls = {
-    left: ['ArrowLeft', 'KeyA'],
-    right: ['ArrowRight', 'KeyD'],
-    jump: ['Space', 'ArrowUp', 'KeyW'],
-    power: ['LeftControl','KeyP'],
-    select: ['Enter'],
-    back: ['Escape']
+    left: ['LEFT', 'A'],
+    right: ['RIGHT', 'D'],
+    jump: ['SPACE', 'UP', 'W'],
+    power: ['CTRL', 'P'],
+    select: ['ENTER'],
+    back: ['ESC']
 };
 
 export default controls;
