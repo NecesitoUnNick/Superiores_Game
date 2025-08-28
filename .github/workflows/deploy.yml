@@ -1,0 +1,38 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: echo "No build step needed for static site"
+
+      - name: Archive files
+        run: |
+          mkdir package
+          cp -R server.js index.html css js package/
+          cp package.json package/
+          cd package && npm ci --only=production && cd ..
+
+      - name: 'Deploy to Azure WebApp'
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: superiores-the-game-app
+          slot-name: production
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: package

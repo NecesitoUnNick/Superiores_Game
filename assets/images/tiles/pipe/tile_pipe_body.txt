@@ -1,0 +1,1 @@
+This file describes the sprite for the body part of a pipe. It should be a PNG image, 32x16 pixels, representing the vertical section of a pipe.

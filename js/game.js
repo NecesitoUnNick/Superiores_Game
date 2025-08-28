@@ -6,11 +6,11 @@ import GameScene from './scenes/GameScene.js';
 // Game configuration
 const config = {
     type: Phaser.AUTO,
-    width: 320,
-    height: 240,
+    width: 640,
+    height: 480,
     parent: 'game-container', // Optional: if you have a div for the game
     pixelArt: true,
-    zoom: 3, // Scale up the game
+    zoom: 1, // Scale up the game - changed from 3 to 1 because of new resolution
     backgroundColor: '#1a1a1a',
     physics: {
         default: 'arcade',
@@ -26,11 +26,11 @@ const config = {
             constructor() {
                 super('BootScene');
             }
+            preload() {
+                this.load.image('initial_bg', 'assets/images/backgrounds/initial_bg.png');
+            }
             create() {
-                this.add.text(160, 120, 'Loading...', { fontSize: '16px', fill: '#fff' }).setOrigin(0.5);
-                // In a real scenario, you would load assets here.
-                // For now, just transitioning to a placeholder MenuScene.
-                // Since MenuScene is empty, this will just show a black screen.
+                this.add.text(320, 240, 'Cargando...', { fontSize: '32px', fill: '#fff', fontFamily: 'Arial' }).setOrigin(0.5);
                 this.scene.start('MenuScene');
             }
         },

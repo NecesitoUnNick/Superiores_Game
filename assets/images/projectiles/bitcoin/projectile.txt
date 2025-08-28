@@ -1,0 +1,1 @@
+This file describes the projectile sprite for 'bitcoin'. It should be a PNG image, 8x8 pixels, representing a bitcoin.

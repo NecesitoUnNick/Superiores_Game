@@ -1,0 +1,1 @@
+This file describes the sprite for a ground tile. It should be a PNG image, 16x16 pixels, representing a solid ground texture.

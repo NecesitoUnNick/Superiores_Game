@@ -1,0 +1,1 @@
+This file describes the sprite for a block tile. It should be a PNG image, 16x16 pixels, representing a breakable or solid block texture.

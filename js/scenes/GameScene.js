@@ -27,64 +27,96 @@ export default class GameScene extends Phaser.Scene {
 
     preload() {
         // Tiles
-        let tileGraphics = this.make.graphics({ width: 16, height: 16 });
-        tileGraphics.fillStyle(0x808080, 1);
-        tileGraphics.fillRect(0, 0, 16, 16);
-        tileGraphics.generateTexture('tile_stone', 16, 16);
-        tileGraphics.destroy();
+        this.load.image('tile_ground', 'assets/images/tiles/ground/tile_ground.png');
+        this.load.image('tile_block', 'assets/images/tiles/block/tile_block.png');
+        this.load.image('tile_pipe_top', 'assets/images/tiles/pipe/tile_pipe_top.png');
+        this.load.image('tile_pipe_body', 'assets/images/tiles/pipe/tile_pipe_body.png');
 
         // Enemies
-        let guardGraphics = this.make.graphics({ width: 16, height: 16 });
-        guardGraphics.fillStyle(0xffa500, 1);
-        guardGraphics.fillRect(0, 0, 16, 16);
-        guardGraphics.generateTexture('enemy_guard', 16, 16);
-        guardGraphics.destroy();
+        this.load.spritesheet('enemy_guard', 'assets/images/enemies/guard/enemy_guard.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('enemy_rat', 'assets/images/enemies/rat/enemy_rat.png', { frameWidth: 16, frameHeight: 16 });
 
-        let ratGraphics = this.make.graphics({ width: 16, height: 16 });
-        ratGraphics.fillStyle(0x8b4513, 1);
-        ratGraphics.fillRect(0, 0, 16, 16);
-        ratGraphics.generateTexture('enemy_rat', 16, 16);
-        ratGraphics.destroy();
+        // Projectiles
+        this.load.image('book', 'assets/images/projectiles/book/book.png');
+        this.load.image('money', 'assets/images/projectiles/money/money.png');
+        this.load.image('brain', 'assets/images/projectiles/brain/brain.png');
+        this.load.image('bitcoin', 'assets/images/projectiles/bitcoin/bitcoin.png');
+        this.load.image('powerpoint', 'assets/images/projectiles/powerpoint/powerpoint.png');
+        this.load.image('photoshop', 'assets/images/projectiles/photoshop/photoshop.png');
+        this.load.image('backhoe', 'assets/images/projectiles/backhoe/backhoe.png');
+        this.load.image('soccer_ball', 'assets/images/projectiles/soccer_ball/soccer_ball.png');
+        this.load.image('maple_leaf', 'assets/images/projectiles/maple_leaf/maple_leaf.png'); // New projectile
 
-        // Projectile
+        // Projectile (default, if needed, but now using character-specific)
         let projectileGraphics = this.make.graphics({ width: 8, height: 8 });
         projectileGraphics.fillStyle(0xffffff, 1);
         projectileGraphics.fillCircle(4, 4, 4);
-        projectileGraphics.generateTexture('projectile', 8, 8);
+        projectileGraphics.generateTexture('projectile', 8, 8); // Keep for backward compatibility or default
         projectileGraphics.destroy();
     }
 
     create() {
-        // Level layout
-        const levelLayout = [
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [1,1,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-        ];
+        // Level layout (10 screens wide = 6400 pixels / 16 pixels/tile = 400 tiles)
+        const levelWidthTiles = 400;
+        const levelHeightTiles = 30; // 480 pixels / 16 pixels/tile = 30 tiles
+        const levelLayout = [];
+
+        // Initialize with empty tiles
+        for (let y = 0; y < levelHeightTiles; y++) {
+            levelLayout[y] = new Array(levelWidthTiles).fill(0);
+        }
+
+        // Create ground (bottom two rows)
+        for (let x = 0; x < levelWidthTiles; x++) {
+            levelLayout[levelHeightTiles - 1][x] = 1; // Ground
+            levelLayout[levelHeightTiles - 2][x] = 1; // Ground
+        }
+
+        // Add some platforms and blocks (example layout)
+        // Platform 1
+        for (let i = 0; i < 5; i++) {
+            levelLayout[levelHeightTiles - 5][20 + i] = 2; // Blocks in air
+        }
+        // Platform 2
+        for (let i = 0; i < 7; i++) {
+            levelLayout[levelHeightTiles - 8][50 + i] = 2; // Blocks in air
+        }
+        // Pipe
+        levelLayout[levelHeightTiles - 3][80] = 3; // Pipe body
+        levelLayout[levelHeightTiles - 3][81] = 3; // Pipe body
+        levelLayout[levelHeightTiles - 4][80] = 4; // Pipe top
+        levelLayout[levelHeightTiles - 4][81] = 4; // Pipe top
+
+        // More platforms
+        for (let i = 0; i < 10; i++) {
+            levelLayout[levelHeightTiles - 6][100 + i] = 2;
+        }
+        for (let i = 0; i < 8; i++) {
+            levelLayout[levelHeightTiles - 9][130 + i] = 2;
+        }
+        for (let i = 0; i < 6; i++) {
+            levelLayout[levelHeightTiles - 12][160 + i] = 2;
+        }
+
 
         this.platforms = this.physics.add.staticGroup();
         levelLayout.forEach((row, y) => {
             row.forEach((tile, x) => {
                 if (tile === 1) {
-                    this.platforms.create(x * 16, y * 16, 'tile_stone').setOrigin(0,0).refreshBody();
+                    this.platforms.create(x * 16, y * 16, 'tile_ground').setOrigin(0,0).refreshBody();
+                } else if (tile === 2) {
+                    this.platforms.create(x * 16, y * 16, 'tile_block').setOrigin(0,0).refreshBody();
+                } else if (tile === 3) {
+                    this.platforms.create(x * 16, y * 16, 'tile_pipe_body').setOrigin(0,0).refreshBody();
+                } else if (tile === 4) {
+                    this.platforms.create(x * 16, y * 16, 'tile_pipe_top').setOrigin(0,0).refreshBody();
                 }
             });
         });
 
         this.player = new Player(this, 50, 100, this.character, this.characterTexture);
         this.physics.add.collider(this.player, this.platforms);
+        console.log('Player created:', this.player); // Debug log
 
         this.enemies = this.physics.add.group({ classType: Enemy, runChildUpdate: true });
         this.physics.add.collider(this.enemies, this.platforms);
@@ -100,14 +132,14 @@ export default class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.projectiles, this.enemies, this.handleProjectileEnemyCollision, null, this);
 
 
-        const levelWidth = levelLayout[0].length * 16;
-        const levelHeight = levelLayout.length * 16;
+        const levelWidth = levelWidthTiles * 16; // Use the new calculated width
+        const levelHeight = levelHeightTiles * 16; // Use the new calculated height
         this.physics.world.setBounds(0, 0, levelWidth, levelHeight);
         this.cameras.main.setBounds(0, 0, levelWidth, levelHeight);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
-        this.livesText = this.add.text(10, 10, `Lives: ${this.lives}`, { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
-        this.scoreText = this.add.text(10, 25, `Score: ${this.score}`, { fontSize: '12px', fill: '#fff' }).setScrollFactor(0);
+        this.livesText = this.add.text(20, 20, `Vidas: ${this.lives}`, { fontSize: '24px', fill: '#fff', fontFamily: 'Arial' }).setScrollFactor(0);
+        this.scoreText = this.add.text(20, 40, `Puntaje: ${this.score}`, { fontSize: '24px', fill: '#fff', fontFamily: 'Arial' }).setScrollFactor(0);
 
         this.time.addEvent({
             delay: 1000,
@@ -116,11 +148,11 @@ export default class GameScene extends Phaser.Scene {
             loop: true
         });
 
-        const winZone = this.add.zone(levelWidth - 32, 160).setSize(32, 32);
+        const winZone = this.add.zone(levelWidth - 64, levelHeight - 100).setSize(64, 64); // Adjusted winZone position and size
         this.physics.world.enable(winZone);
         winZone.body.setAllowGravity(false);
         this.physics.add.overlap(this.player, winZone, () => {
-            this.add.text(this.cameras.main.scrollX + 160, 120, 'YOU WIN!', { fontSize: '32px', fill: '#0f0' }).setOrigin(0.5);
+            this.add.text(this.cameras.main.scrollX + 320, 240, '¡GANASTE!', { fontSize: '64px', fill: '#0f0', fontFamily: 'Arial' }).setOrigin(0.5);
             this.physics.pause();
         }, null, this);
 
@@ -130,14 +162,17 @@ export default class GameScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+        console.log('GameScene update loop running.'); // Debug log
         if (this.player.active) {
+            console.log('Player update called.'); // Debug log
             this.player.update(time, delta);
-            this.scoreText.setText(`Score: ${this.score}`);
+            this.scoreText.setText(`Puntaje: ${this.score}`); // Corrected translation
         }
     }
 
     fireProjectile(x, y, direction) {
-        const projectile = new Projectile(this, x, y, 'projectile');
+        const projectileType = this.player.stats.power; // Get projectile type from player stats
+        const projectile = new Projectile(this, x, y, projectileType); // Use the specific projectile type
         this.projectiles.add(projectile);
         projectile.fire(x, y, direction);
     }
@@ -172,11 +207,12 @@ export default class GameScene extends Phaser.Scene {
         this.physics.pause();
         this.player.setTint(0xff0000);
 
-        const gameOverText = this.add.text(this.cameras.main.scrollX + 160, 120, 'GAME OVER', {
-            fontSize: '32px',
+        const gameOverText = this.add.text(this.cameras.main.scrollX + 320, 240, 'FIN DEL JUEGO', {
+            fontSize: '64px',
             fill: '#ff0000',
             stroke: '#ffffff',
-            strokeThickness: 4
+            strokeThickness: 8, // Increased stroke thickness for better visibility
+            fontFamily: 'Arial'
         }).setOrigin(0.5);
 
         this.time.addEvent({

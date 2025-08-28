@@ -1,0 +1,1 @@
+This file describes the sprite for 'El Trader'. It should be a PNG spritesheet, 16x16 pixels per frame, with animations for idle, run, jump, and attack. The character should be a trader-like figure.
