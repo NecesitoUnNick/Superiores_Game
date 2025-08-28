@@ -15,6 +15,7 @@ export default class GameScene extends Phaser.Scene {
         this.score = 0;
         this.livesText = null;
         this.scoreText = null;
+        this.maxScrollX = 0;
     }
 
     init(data) {
@@ -167,6 +168,18 @@ export default class GameScene extends Phaser.Scene {
             console.log('Player update called.'); // Debug log
             this.player.update(time, delta);
             this.scoreText.setText(`Puntaje: ${this.score}`); // Corrected translation
+        }
+
+        // Lock camera scrolling to the left
+        if (this.cameras.main.scrollX < this.maxScrollX) {
+            this.cameras.main.scrollX = this.maxScrollX;
+        } else {
+            this.maxScrollX = this.cameras.main.scrollX;
+        }
+
+        // Prevent player from going off-screen left
+        if (this.player.x < this.cameras.main.scrollX) {
+            this.player.x = this.cameras.main.scrollX;
         }
     }
 
