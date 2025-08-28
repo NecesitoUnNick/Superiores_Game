@@ -9,7 +9,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
             { name: 'El Consultor', key: 'player_consultor' },
             { name: 'El Diseñador', key: 'player_disenador' },
             { name: 'El Comercial', key: 'player_comercial' },
-            { name: 'El Canadiense*', key: 'player_canadiense', locked: true } // El Canadiense is now locked
+            { name: 'El Canadiense', key: 'player_canadiense', locked: true } // El Canadiense is now locked
         ];
         this.selectedCharacterIndex = 0;
         this.cursor = null;
@@ -20,15 +20,24 @@ export default class CharacterSelectScene extends Phaser.Scene {
 
     preload() {
         this.load.image('black_bg', 'assets/images/ui/black_bg.png');
-        this.load.spritesheet('player_abogado', 'assets/images/characters/el_abogado/player_abogado.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('player_financiero', 'assets/images/characters/el_financiero/player_financiero.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('player_cientista', 'assets/images/characters/el_cientista/player_cientista.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('player_trader', 'assets/images/characters/el_trader/player_trader.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('player_consultor', 'assets/images/characters/el_consultor/player_consultor.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('player_disenador', 'assets/images/characters/el_disenador/player_disenador.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('player_comercial', 'assets/images/characters/el_comercial/player_comercial.png', { frameWidth: 16, frameHeight: 16 });
-        // Removed player_futbolista
-        this.load.spritesheet('player_canadiense', 'assets/images/characters/el_canadiense/player_canadiense.png', { frameWidth: 16, frameHeight: 16 }); // New character sprite
+
+        const characters = [
+            'el_abogado', 'el_financiero', 'el_cientista', 'el_trader',
+            'el_consultor', 'el_disenador', 'el_comercial', 'el_canadiense'
+        ];
+        const animations = [
+            'idle', 'move_forward', 'move_backward', 'jump', 'throw_power', 'lose_life'
+        ];
+
+        characters.forEach(charName => {
+            animations.forEach(animName => {
+                this.load.spritesheet(
+                    `player_${charName}_${animName}`,
+                    `assets/images/characters/${charName}/sprite_${animName}.png`,
+                    { frameWidth: 16, frameHeight: 16 }
+                );
+            });
+        });
 
         // Create cursor graphic
         let cursorGraphics = this.make.graphics({ x: 0, y: 0 });
@@ -59,7 +68,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
 
             // Add "caracter desbloqueable" text for El Canadiense
             if (char.name === 'El Canadiense') {
-                this.add.text(x, y - 40, '¡Personaje Desbloqueable!', { fontSize: '11px', fill: '#0f0', fontFamily: 'Arial' }).setOrigin(0.5);
+                this.add.text(x, y - 40, '¡Personaje Desbloqueable!*', { fontSize: '10px', fill: '#0f0', fontFamily: 'Arial' }).setOrigin(0.5);
             }
         });
 
@@ -76,7 +85,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.input.keyboard.on('keydown-DOWN', () => this.moveSelection(this.cols), this); // New: Down arrow
 
         // Add disclaimer at the bottom
-        this.add.text(120, 460, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '10 px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
+        this.add.text(130, 450, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '12px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
     }
 
     moveSelection(change) {

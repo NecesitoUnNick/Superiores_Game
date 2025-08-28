@@ -1,0 +1,1 @@
+This file describes the lose life animation spritesheet for El Abogado. It should be a PNG spritesheet, 16x16 pixels per frame, with multiple frames for a losing life animation.

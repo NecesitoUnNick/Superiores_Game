@@ -23,6 +23,47 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.keys[action] = controls[action].map(key => this.scene.input.keyboard.addKey(key));
             console.log('Key mapped for action', action, ':', this.keys[action].map(k => k.keyCode)); // Debug log
         }
+
+        // Define animations
+        const baseKey = textureKey.replace('player_', ''); // e.g., 'el_abogado'
+        this.anims.create({
+            key: 'idle',
+            frames: this.anims.generateFrameNumbers(`player_${baseKey}_idle`, { start: 0, end: 3 }), // Assuming 4 frames for idle
+            frameRate: 8,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'move_forward',
+            frames: this.anims.generateFrameNumbers(`player_${baseKey}_move_forward`, { start: 0, end: 7 }), // Assuming 8 frames for move
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'move_backward',
+            frames: this.anims.generateFrameNumbers(`player_${baseKey}_move_backward`, { start: 0, end: 7 }), // Assuming 8 frames for move
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'jump',
+            frames: this.anims.generateFrameNumbers(`player_${baseKey}_jump`, { start: 0, end: 0 }), // Assuming single frame for jump
+            frameRate: 1,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'throw_power',
+            frames: this.anims.generateFrameNumbers(`player_${baseKey}_throw_power`, { start: 0, end: 2 }), // Assuming 3 frames for throw
+            frameRate: 10,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'lose_life',
+            frames: this.anims.generateFrameNumbers(`player_${baseKey}_lose_life`, { start: 0, end: 4 }), // Assuming 5 frames for lose life
+            frameRate: 8,
+            repeat: 0
+        });
+
+        this.play('idle'); // Start with idle animation
     }
 
     getCharacterStats() {
@@ -68,19 +109,25 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityX(-this.stats.speed);
             this.facing = 'left';
             this.flipX = true;
+            this.play('move_backward', true); // Play move backward animation
         } else if (this.isActionDown('right')) {
             console.log('Right action down'); // Debug log
             this.setVelocityX(this.stats.speed);
             this.facing = 'right';
             this.flipX = false;
+            this.play('move_forward', true); // Play move forward animation
         } else {
             this.setVelocityX(0);
+            if (onGround) {
+                this.play('idle', true); // Play idle animation if on ground and not moving
+            }
         }
 
         // Jumping
         if (this.isActionDown('jump') && onGround) {
             console.log('Jump action down'); // Debug log
             this.setVelocityY(-this.stats.jump);
+            this.play('jump', true); // Play jump animation
         }
 
         // Power-up / Firing
@@ -88,6 +135,23 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             console.log('Power action down'); // Debug log
             this.scene.fireProjectile(this.x, this.y, this.facing);
             this.lastFired = time + this.stats.fireRate;
+            this.play('throw_power', true); // Play throw power animation
+            this.once('animationcomplete-throw_power', () => {
+                if (!this.body.velocity.x && onGround) { // If not moving and on ground, go back to idle
+                    this.play('idle', true);
+                } else if (!this.body.velocity.x && !onGround) { // If not moving and in air, stay in jump
+                    this.play('jump', true);
+                } else if (this.body.velocity.x && onGround) { // If moving and on ground, go back to move
+                    this.play(this.facing === 'left' ? 'move_backward' : 'move_forward', true);
+                }
+            });
         }
+
+        // Handle lose life animation (assuming a method in GameScene will call this)
+        // This part will be triggered externally, e.g., by handlePlayerEnemyCollision
+        // For now, just a placeholder.
+        // if (this.isLosingLife) { // This would be a flag set by GameScene
+        //     this.play('lose_life', true);
+        // }
     }
 }
