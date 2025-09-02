@@ -74,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        this.player = new Player(this, 75, 150, this.character, this.characterTexture);
+        this.player = new Player(this, 75, 0, this.character, this.characterTexture);
         this.physics.add.collider(this.player, this.platforms);
         console.log('Player created:', this.player); // Debug log
 
