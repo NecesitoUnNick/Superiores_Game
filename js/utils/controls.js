@@ -2,7 +2,7 @@ const controls = {
     left: ['LEFT', 'A'],
     right: ['RIGHT', 'D'],
     jump: ['SPACE', 'UP', 'W'],
-    power: ['CTRL', 'P'],
+    power: ['ControlLeft', 'P'],
     select: ['ENTER'],
     back: ['ESC']
 };
