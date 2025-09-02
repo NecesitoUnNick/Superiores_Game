@@ -21,20 +21,17 @@ export default class CharacterSelectScene extends Phaser.Scene {
     preload() {
         this.load.image('black_bg', 'assets/images/ui/black_bg.png');
 
-        const characters = [
-            'el_abogado', 'el_financiero', 'el_cientista', 'el_trader',
-            'el_consultor', 'el_disenador', 'el_comercial', 'el_canadiense'
-        ];
         const animations = [
             'idle'//, 'move_forward', 'move_backward', 'jump', 'throw_power', 'lose_life'
         ];
 
-        characters.forEach(charName => {
+        this.characters.forEach(char => {
+            const charName = 'el_' + char.key.replace('player_', '');
             animations.forEach(animName => {
                 this.load.spritesheet(
-                    `player_${charName}_${animName}`,
+                    `${char.key}_${animName}`,
                     `assets/images/characters/${charName}/sprite_${animName}.png`,
-                    { frameWidth: 64, frameHeight: 48 }
+                    { frameWidth: 60, frameHeight: 64 }
                 );
             });
         });
