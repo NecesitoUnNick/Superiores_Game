@@ -1,6 +1,7 @@
 import Player from '../entities/Player.js';
 import Enemy from '../entities/Enemy.js';
 import Projectile from '../entities/Projectile.js';
+import levelConfig from '../levels/level1.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -16,6 +17,7 @@ export default class GameScene extends Phaser.Scene {
         this.livesText = null;
         this.scoreText = null;
         this.maxScrollX = 0;
+        this.TILE_SIZE = 32;
     }
 
     init(data) {
@@ -24,6 +26,7 @@ export default class GameScene extends Phaser.Scene {
         // Persist lives and score across scene restarts
         this.lives = data.lives === undefined ? 3 : data.lives;
         this.score = data.score === undefined ? 0 : data.score;
+        this.levelConfig = levelConfig;
     }
 
     preload() {
@@ -57,60 +60,16 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
-        // Level layout (10 screens wide = 6400 pixels / 16 pixels/tile = 400 tiles)
-        const levelWidthTiles = 400;
-        const levelHeightTiles = 50; // 800 pixels / 16 pixels/tile = 50 tiles
-        const levelLayout = [];
-
-        // Initialize with empty tiles
-        for (let y = 0; y < levelHeightTiles; y++) {
-            levelLayout[y] = new Array(levelWidthTiles).fill(0);
-        }
-
-        // Create ground (bottom two rows)
-        for (let x = 0; x < levelWidthTiles; x++) {
-            levelLayout[levelHeightTiles - 1][x] = 1; // Ground
-            levelLayout[levelHeightTiles - 2][x] = 1; // Ground
-        }
-
-        // Add some platforms and blocks (example layout)
-        // Platform 1
-        for (let i = 0; i < 5; i++) {
-            levelLayout[levelHeightTiles - 5][20 + i] = 2; // Blocks in air
-        }
-        // Platform 2
-        for (let i = 0; i < 7; i++) {
-            levelLayout[levelHeightTiles - 8][50 + i] = 2; // Blocks in air
-        }
-        // Pipe
-        levelLayout[levelHeightTiles - 3][80] = 3; // Pipe body
-        levelLayout[levelHeightTiles - 3][81] = 3; // Pipe body
-        levelLayout[levelHeightTiles - 4][80] = 4; // Pipe top
-        levelLayout[levelHeightTiles - 4][81] = 4; // Pipe top
-
-        // More platforms
-        for (let i = 0; i < 10; i++) {
-            levelLayout[levelHeightTiles - 6][100 + i] = 2;
-        }
-        for (let i = 0; i < 8; i++) {
-            levelLayout[levelHeightTiles - 9][130 + i] = 2;
-        }
-        for (let i = 0; i < 6; i++) {
-            levelLayout[levelHeightTiles - 12][160 + i] = 2;
-        }
-
+        const levelLayout = this.levelConfig.layout;
+        const levelWidthTiles = this.levelConfig.width;
+        const levelHeightTiles = this.levelConfig.height;
 
         this.platforms = this.physics.add.staticGroup();
         levelLayout.forEach((row, y) => {
             row.forEach((tile, x) => {
-                if (tile === 1) {
-                                        this.platforms.create(x * 24, y * 24, 'tile_ground').setOrigin(0,0).setScale(1.5).refreshBody();
-                } else if (tile === 2) {
-                    this.platforms.create(x * 24, y * 24, 'tile_block').setOrigin(0,0).setScale(1.5).refreshBody();
-                } else if (tile === 3) {
-                    this.platforms.create(x * 24, y * 24, 'tile_pipe_body').setOrigin(0,0).setScale(1.5).refreshBody();
-                } else if (tile === 4) {
-                    this.platforms.create(x * 24, y * 24, 'tile_pipe_top').setOrigin(0,0).setScale(1.5).refreshBody();
+                const tileType = this.levelConfig.tilemap[tile];
+                if (tileType) {
+                    this.platforms.create(x * this.TILE_SIZE, y * this.TILE_SIZE, tileType).setOrigin(0,0).refreshBody();
                 }
             });
         });
@@ -121,10 +80,9 @@ export default class GameScene extends Phaser.Scene {
 
         this.enemies = this.physics.add.group({ classType: Enemy, runChildUpdate: true });
         this.physics.add.collider(this.enemies, this.platforms);
-        this.enemies.add(new Enemy(this, 300, 225, 'enemy_guard', 'guard'));
-        this.enemies.add(new Enemy(this, 525, 150, 'enemy_guard', 'guard'));
-        this.enemies.add(new Enemy(this, 825, 225, 'enemy_rat', 'rat'));
-        this.enemies.add(new Enemy(this, 900, 225, 'enemy_rat', 'rat'));
+        this.levelConfig.enemies.forEach(enemyConfig => {
+            this.enemies.add(new Enemy(this, enemyConfig.x, enemyConfig.y, enemyConfig.type, enemyConfig.name));
+        });
         this.physics.add.collider(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
 
         // Projectiles
@@ -133,8 +91,8 @@ export default class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.projectiles, this.enemies, this.handleProjectileEnemyCollision, null, this);
 
 
-        const levelWidth = levelWidthTiles * 64; // Use the new calculated width
-        const levelHeight = levelHeightTiles * 64; // Use the new calculated height
+        const levelWidth = this.levelConfig.width * this.TILE_SIZE;
+        const levelHeight = this.levelConfig.height * this.TILE_SIZE;
         this.physics.world.setBounds(0, 0, levelWidth, levelHeight);
         this.cameras.main.setBounds(0, 0, levelWidth, levelHeight);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
