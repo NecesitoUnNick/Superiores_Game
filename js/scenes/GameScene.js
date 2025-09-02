@@ -28,8 +28,8 @@ export default class GameScene extends Phaser.Scene {
 
     preload() {
         // Tiles
-        this.load.image('tile_ground', 'assets/images/tiles/ground/tile_ground.png');
-        this.load.image('tile_block', 'assets/images/tiles/block/tile_block.png');
+        this.load.image('tile_ground', 'assets/images/tiles/ground/ground.png');
+        this.load.image('tile_block', 'assets/images/tiles/block/block.png');
         this.load.image('tile_pipe_top', 'assets/images/tiles/pipe/tile_pipe_top.png');
         this.load.image('tile_pipe_body', 'assets/images/tiles/pipe/tile_pipe_body.png');
 
