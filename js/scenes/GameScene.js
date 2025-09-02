@@ -220,7 +220,7 @@ export default class GameScene extends Phaser.Scene {
         this.physics.pause();
         this.player.setTint(0xff0000);
 
-        const gameOverText = this.add.text(this.cameras.main.scrollX + 300, 400, 'FIN DEL JUEGO', {
+        const gameOverText = this.add.text(this.cameras.main.scrollX + 400, 300, 'FIN DEL JUEGO', {
             fontSize: '64px',
             fill: '#ff0000',
             stroke: '#ffffff',

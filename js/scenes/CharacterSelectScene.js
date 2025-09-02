@@ -26,7 +26,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
             'el_consultor', 'el_disenador', 'el_comercial', 'el_canadiense'
         ];
         const animations = [
-            'idle', 'move_forward', 'move_backward', 'jump', 'throw_power', 'lose_life'
+            'idle'//, 'move_forward', 'move_backward', 'jump', 'throw_power', 'lose_life'
         ];
 
         characters.forEach(charName => {
@@ -34,7 +34,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
                 this.load.spritesheet(
                     `player_${charName}_${animName}`,
                     `assets/images/characters/${charName}/sprite_${animName}.png`,
-                    { frameWidth: 64, frameHeight: 60 }
+                    { frameWidth: 64, frameHeight: 48 }
                 );
             });
         });
@@ -48,14 +48,14 @@ export default class CharacterSelectScene extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(300, 400, 'black_bg').setDepth(-1); // Add black background, centered for 600x800
+        this.add.image(400, 300, 'black_bg').setDepth(-1); // Add black background, centered for 800x600
 
-        this.add.text(300, 100, 'Selecciona tu Personaje', { fontSize: '40px', fill: '#fff', fontFamily: 'Arial' }).setOrigin(0.5);
+        this.add.text(400, 50, 'Selecciona tu Personaje', { fontSize: '40px', fill: '#fff', fontFamily: 'Arial' }).setOrigin(0.5);
 
-        const startX = 120; // Adjusted for 4 columns
-        const startY = 300; // Adjusted for 2 rows
-        const colSpacing = 120; // Spacing between columns
-        const rowSpacing = 150; // Spacing between rows
+        const startX = 98; // Adjusted for 4 columns
+        const startY = 180; // Adjusted for 2 rows
+        const colSpacing = 180; // Spacing between columns
+        const rowSpacing = 180; // Spacing between rows
 
         this.characters.forEach((char, index) => {
             const x = startX + (index % this.cols) * colSpacing;
@@ -84,7 +84,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.input.keyboard.on('keydown-DOWN', () => this.moveSelection(this.cols), this); // New: Down arrow
 
         // Add disclaimer at the bottom
-        this.add.text(300, 750, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '12px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
+        this.add.text(400, 550, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '12px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
     }
 
     moveSelection(change) {
