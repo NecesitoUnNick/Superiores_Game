@@ -60,7 +60,6 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.characters.forEach((char, index) => {
             const x = startX + (index % this.cols) * colSpacing;
             const y = startY + Math.floor(index / this.cols) * rowSpacing;
-            // Display character sprite
             const sprite = this.add.sprite(x, y, char.key);
             this.characterSprites.push(sprite);
             // Display character name
