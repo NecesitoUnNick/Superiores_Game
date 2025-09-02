@@ -34,8 +34,8 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('tile_pipe_body', 'assets/images/tiles/pipe/tile_pipe_body.png');
 
         // Enemies
-        this.load.spritesheet('enemy_guard', 'assets/images/enemies/guard/enemy_guard.png', { frameWidth: 16, frameHeight: 16 });
-        this.load.spritesheet('enemy_rat', 'assets/images/enemies/rat/enemy_rat.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('enemy_guard', 'assets/images/enemies/guard/enemy_guard.png', { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('enemy_rat', 'assets/images/enemies/rat/enemy_rat.png', { frameWidth: 64, frameHeight: 64 });
 
         // Projectiles
         this.load.image('book', 'assets/images/projectiles/book/book.png');
@@ -59,7 +59,7 @@ export default class GameScene extends Phaser.Scene {
     create() {
         // Level layout (10 screens wide = 6400 pixels / 16 pixels/tile = 400 tiles)
         const levelWidthTiles = 400;
-        const levelHeightTiles = 30; // 480 pixels / 16 pixels/tile = 30 tiles
+        const levelHeightTiles = 50; // 800 pixels / 16 pixels/tile = 50 tiles
         const levelLayout = [];
 
         // Initialize with empty tiles
@@ -104,27 +104,27 @@ export default class GameScene extends Phaser.Scene {
         levelLayout.forEach((row, y) => {
             row.forEach((tile, x) => {
                 if (tile === 1) {
-                    this.platforms.create(x * 16, y * 16, 'tile_ground').setOrigin(0,0).refreshBody();
+                                        this.platforms.create(x * 24, y * 24, 'tile_ground').setOrigin(0,0).setScale(1.5).refreshBody();
                 } else if (tile === 2) {
-                    this.platforms.create(x * 16, y * 16, 'tile_block').setOrigin(0,0).refreshBody();
+                    this.platforms.create(x * 24, y * 24, 'tile_block').setOrigin(0,0).setScale(1.5).refreshBody();
                 } else if (tile === 3) {
-                    this.platforms.create(x * 16, y * 16, 'tile_pipe_body').setOrigin(0,0).refreshBody();
+                    this.platforms.create(x * 24, y * 24, 'tile_pipe_body').setOrigin(0,0).setScale(1.5).refreshBody();
                 } else if (tile === 4) {
-                    this.platforms.create(x * 16, y * 16, 'tile_pipe_top').setOrigin(0,0).refreshBody();
+                    this.platforms.create(x * 24, y * 24, 'tile_pipe_top').setOrigin(0,0).setScale(1.5).refreshBody();
                 }
             });
         });
 
-        this.player = new Player(this, 50, 100, this.character, this.characterTexture);
+        this.player = new Player(this, 75, 150, this.character, this.characterTexture);
         this.physics.add.collider(this.player, this.platforms);
         console.log('Player created:', this.player); // Debug log
 
         this.enemies = this.physics.add.group({ classType: Enemy, runChildUpdate: true });
         this.physics.add.collider(this.enemies, this.platforms);
-        this.enemies.add(new Enemy(this, 200, 150, 'enemy_guard', 'guard'));
-        this.enemies.add(new Enemy(this, 350, 100, 'enemy_guard', 'guard'));
-        this.enemies.add(new Enemy(this, 550, 150, 'enemy_rat', 'rat'));
-        this.enemies.add(new Enemy(this, 600, 150, 'enemy_rat', 'rat'));
+        this.enemies.add(new Enemy(this, 300, 225, 'enemy_guard', 'guard'));
+        this.enemies.add(new Enemy(this, 525, 150, 'enemy_guard', 'guard'));
+        this.enemies.add(new Enemy(this, 825, 225, 'enemy_rat', 'rat'));
+        this.enemies.add(new Enemy(this, 900, 225, 'enemy_rat', 'rat'));
         this.physics.add.collider(this.player, this.enemies, this.handlePlayerEnemyCollision, null, this);
 
         // Projectiles
@@ -133,8 +133,8 @@ export default class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.projectiles, this.enemies, this.handleProjectileEnemyCollision, null, this);
 
 
-        const levelWidth = levelWidthTiles * 16; // Use the new calculated width
-        const levelHeight = levelHeightTiles * 16; // Use the new calculated height
+        const levelWidth = levelWidthTiles * 64; // Use the new calculated width
+        const levelHeight = levelHeightTiles * 64; // Use the new calculated height
         this.physics.world.setBounds(0, 0, levelWidth, levelHeight);
         this.cameras.main.setBounds(0, 0, levelWidth, levelHeight);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
@@ -220,7 +220,7 @@ export default class GameScene extends Phaser.Scene {
         this.physics.pause();
         this.player.setTint(0xff0000);
 
-        const gameOverText = this.add.text(this.cameras.main.scrollX + 320, 240, 'FIN DEL JUEGO', {
+        const gameOverText = this.add.text(this.cameras.main.scrollX + 300, 400, 'FIN DEL JUEGO', {
             fontSize: '64px',
             fill: '#ff0000',
             stroke: '#ffffff',
