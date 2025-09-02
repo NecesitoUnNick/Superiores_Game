@@ -34,7 +34,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
                 this.load.spritesheet(
                     `player_${charName}_${animName}`,
                     `assets/images/characters/${charName}/sprite_${animName}.png`,
-                    { frameWidth: 64, frameHeight: 48 }
+                    { frameWidth: 64, frameHeight: 60 }
                 );
             });
         });
@@ -60,7 +60,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.characters.forEach((char, index) => {
             const x = startX + (index % this.cols) * colSpacing;
             const y = startY + Math.floor(index / this.cols) * rowSpacing;
-            const sprite = this.add.sprite(x, y, char.key);
+            const sprite = this.add.sprite(x, y, `${char.key}_idle`);
             this.characterSprites.push(sprite);
             // Display character name
             this.add.text(x, y + 80, char.name, { fontSize: '20px', fill: '#fff', align: 'center', fontFamily: 'Arial' }).setOrigin(0.5);
