@@ -45,14 +45,18 @@ export default class CharacterSelectScene extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(400, 300, 'black_bg').setDepth(-1); // Add black background, centered for 800x600
+        const { width, height } = this.sys.game.config;
+        this.add.image(width / 2, height / 2, 'black_bg').setDepth(-1);
 
-        this.add.text(400, 50, 'Selecciona tu Personaje', { fontSize: '40px', fill: '#fff', fontFamily: 'Arial' }).setOrigin(0.5);
+        this.add.text(width / 2, 80, 'Selecciona tu Personaje', { fontSize: '48px', fill: '#fff', fontFamily: 'Arial' }).setOrigin(0.5);
 
-        const startX = 98; // Adjusted for 4 columns
-        const startY = 180; // Adjusted for 2 rows
-        const colSpacing = 180; // Spacing between columns
-        const rowSpacing = 180; // Spacing between rows
+        const colSpacing = 200;
+        const rowSpacing = 220;
+        const gridWidth = this.cols * colSpacing;
+        const startX = (width - gridWidth) / 2 + (colSpacing / 2);
+        const gridHeight = this.rows * rowSpacing;
+        const startY = (height - gridHeight) / 2 + (rowSpacing / 2);
+
 
         this.characters.forEach((char, index) => {
             const x = startX + (index % this.cols) * colSpacing;
@@ -81,7 +85,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.input.keyboard.on('keydown-DOWN', () => this.moveSelection(this.cols), this); // New: Down arrow
 
         // Add disclaimer at the bottom
-        this.add.text(400, 550, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '12px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
+        this.add.text(width / 2, height - 40, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '14px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
     }
 
     moveSelection(change) {

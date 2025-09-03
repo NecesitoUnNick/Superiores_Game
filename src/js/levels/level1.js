@@ -1,6 +1,6 @@
 const levelLayout = [];
 const levelWidthTiles = 400;
-const levelHeightTiles = 50;
+const levelHeightTiles = 60;
 
 // Initialize with empty tiles
 for (let y = 0; y < levelHeightTiles; y++) {
@@ -37,6 +37,13 @@ for (let i = 0; i < 8; i++) {
 }
 for (let i = 0; i < 6; i++) {
     levelLayout[levelHeightTiles - 12][160 + i] = 2;
+}
+// Added platforms
+for (let i = 0; i < 8; i++) {
+    levelLayout[levelHeightTiles - 15][190 + i] = 2;
+}
+for (let i = 0; i < 10; i++) {
+    levelLayout[levelHeightTiles - 18][220 + i] = 2;
 }
 
 const levelConfig = {

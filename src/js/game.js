@@ -6,8 +6,8 @@ import GameScene from './scenes/GameScene.js';
 // Game configuration
 const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 768,
     parent: 'game-container', // Optional: if you have a div for the game
     pixelArt: true,
     zoom: 1, // Scale up the game - changed from 3 to 1 because of new resolution
