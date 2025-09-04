@@ -77,12 +77,29 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.updateCursorPosition();
 
         // Input handling
-        const cursors = this.input.keyboard.createCursorKeys();
-        this.input.keyboard.on('keydown-ENTER', this.confirmSelection, this);
-        this.input.keyboard.on('keydown-LEFT', () => this.moveSelection(-1), this);
-        this.input.keyboard.on('keydown-RIGHT', () => this.moveSelection(1), this);
-        this.input.keyboard.on('keydown-UP', () => this.moveSelection(-this.cols), this); // New: Up arrow
-        this.input.keyboard.on('keydown-DOWN', () => this.moveSelection(this.cols), this); // New: Down arrow
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+        this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        this.upKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+        this.downKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+
+        this.enterKey.on('down', this.confirmSelection, this);
+        this.leftKey.on('down', () => this.moveSelection(-1), this);
+        this.rightKey.on('down', () => this.moveSelection(1), this);
+        this.upKey.on('down', () => this.moveSelection(-this.cols), this);
+        this.downKey.on('down', () => this.moveSelection(this.cols), this);
+
+        // Add Clear button
+        const { width, height } = this.sys.game.config;
+        this.clearButton = this.add.text(width / 2, height - 100, 'Clear', {
+            fontSize: '32px',
+            fill: '#fff',
+            backgroundColor: '#333',
+            padding: { left: 15, right: 15, top: 10, bottom: 10 }
+        }).setOrigin(0.5).setInteractive().setVisible(false);
+
+        this.clearButton.on('pointerdown', () => this.clearSelection());
 
         // Add disclaimer at the bottom
         this.add.text(width / 2, height - 40, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '14px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
@@ -109,10 +126,42 @@ export default class CharacterSelectScene extends Phaser.Scene {
     confirmSelection() {
         const selectedCharacter = this.characters[this.selectedCharacterIndex];
         if (selectedCharacter.locked) {
-            // Optionally play a sound or show a message that character is locked
             console.log('Character is locked!');
-            return; // Prevent selection
+            return;
         }
-        this.scene.start('GameScene', { character: selectedCharacter.name, characterTexture: selectedCharacter.key });
+
+        // Show "Selected" text and the Clear button
+        if (!this.selectedText) {
+            const selectedSprite = this.characterSprites[this.selectedCharacterIndex];
+            this.selectedText = this.add.text(selectedSprite.x, selectedSprite.y + 120, 'Selected!', { fontSize: '24px', fill: '#0f0' }).setOrigin(0.5);
+        }
+        this.clearButton.setVisible(true);
+
+        // Disable movement keys
+        this.leftKey.enabled = false;
+        this.rightKey.enabled = false;
+        this.upKey.enabled = false;
+        this.downKey.enabled = false;
+        this.enterKey.enabled = false; // Prevent re-selecting
+
+        // After a delay, proceed to the game
+        this.time.delayedCall(1000, () => {
+             this.scene.start('GameScene', { character: selectedCharacter.name, characterTexture: selectedCharacter.key });
+        });
+    }
+
+    clearSelection() {
+        if (this.selectedText) {
+            this.selectedText.destroy();
+            this.selectedText = null;
+        }
+        this.clearButton.setVisible(false);
+
+        // Re-enable movement keys
+        this.leftKey.enabled = true;
+        this.rightKey.enabled = true;
+        this.upKey.enabled = true;
+        this.downKey.enabled = true;
+        this.enterKey.enabled = true;
     }
 }

@@ -105,13 +105,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         const onGround = this.body.touching.down;
 
         // Movement
-        if (this.isActionDown('left')) {
-            console.log('Left action down'); // Debug log
-            this.setVelocityX(-this.stats.speed);
-            this.facing = 'left';
-            this.flipX = true;
-            this.play('move_backward', true); // Play move backward animation
-        } else if (this.isActionDown('right')) {
+        if (this.isActionDown('right')) {
             console.log('Right action down'); // Debug log
             this.setVelocityX(this.stats.speed);
             this.facing = 'right';
