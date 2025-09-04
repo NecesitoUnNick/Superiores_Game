@@ -74,23 +74,8 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        let firstPlatform = null;
-        for (let y = 0; y < levelHeightTiles; y++) {
-            for (let x = 0; x < levelWidthTiles; x++) {
-                if (levelLayout[y][x] === 2) { // Assuming 2 is a platform tile
-                    firstPlatform = { x: x, y: y };
-                    break;
-                }
-            }
-            if (firstPlatform) break;
-        }
-
-        let playerStartX = 100;
-        let playerStartY = 100;
-        if (firstPlatform) {
-            playerStartX = firstPlatform.x * this.TILE_SIZE + this.TILE_SIZE / 2;
-            playerStartY = firstPlatform.y * this.TILE_SIZE - 64; // Spawn above the platform
-        }
+        const playerStartX = 100;
+        const playerStartY = (this.levelConfig.height - 3) * this.TILE_SIZE;
 
         this.player = new Player(this, playerStartX, playerStartY, this.character, this.characterTexture);
         this.physics.add.collider(this.player, this.platforms);
@@ -150,6 +135,11 @@ export default class GameScene extends Phaser.Scene {
             console.log('Player update called.'); // Debug log
             this.player.update(time, delta);
             this.scoreText.setText(`Puntaje: ${this.score}`); // Corrected translation
+
+            // Fall detection
+            if (this.player.y > this.levelConfig.height * this.TILE_SIZE) {
+                this.handlePlayerFall();
+            }
         }
 
         // Lock camera scrolling to the left
@@ -185,6 +175,22 @@ export default class GameScene extends Phaser.Scene {
     handlePlayerEnemyCollision(player, enemy) {
         this.lives--;
         this.livesText.setText(`Lives: ${this.lives}`);
+
+        if (this.lives > 0) {
+            this.scene.restart({
+                character: this.character,
+                characterTexture: this.characterTexture,
+                lives: this.lives,
+                score: this.score
+            });
+        } else {
+            this.gameOver();
+        }
+    }
+
+    handlePlayerFall() {
+        this.lives--;
+        this.livesText.setText(`Vidas: ${this.lives}`);
 
         if (this.lives > 0) {
             this.scene.restart({

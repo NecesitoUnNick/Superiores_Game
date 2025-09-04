@@ -1,6 +1,6 @@
 const levelLayout = [];
 const levelWidthTiles = 400;
-const levelHeightTiles = 60;
+const levelHeightTiles = 20; // Reduced height for a more classic feel
 
 // Initialize with empty tiles
 for (let y = 0; y < levelHeightTiles; y++) {
@@ -13,38 +13,38 @@ for (let x = 0; x < levelWidthTiles; x++) {
     levelLayout[levelHeightTiles - 2][x] = 1; // Ground
 }
 
-// Add some platforms and blocks (example layout)
-// Platform 1
-for (let i = 0; i < 5; i++) {
-    levelLayout[levelHeightTiles - 5][20 + i] = 2; // Blocks in air
-}
-// Platform 2
-for (let i = 0; i < 7; i++) {
-    levelLayout[levelHeightTiles - 8][50 + i] = 2; // Blocks in air
-}
-// Pipe
-levelLayout[levelHeightTiles - 3][80] = 3; // Pipe body
-levelLayout[levelHeightTiles - 3][81] = 3; // Pipe body
-levelLayout[levelHeightTiles - 4][80] = 4; // Pipe top
-levelLayout[levelHeightTiles - 4][81] = 4; // Pipe top
+// Add some platforms and blocks (Mario-style)
+// Floating blocks
+levelLayout[levelHeightTiles - 5][20] = 2;
+levelLayout[levelHeightTiles - 5][21] = 2;
+levelLayout[levelHeightTiles - 5][22] = 2;
 
-// More platforms
+// Higher platform
+for (let i = 0; i < 5; i++) {
+    levelLayout[levelHeightTiles - 8][35 + i] = 2;
+}
+
+// Another set of blocks
+levelLayout[levelHeightTiles - 5][50] = 2;
+levelLayout[levelHeightTiles - 9][55] = 2;
+levelLayout[levelHeightTiles - 9][56] = 2;
+
+// A small pyramid
+levelLayout[levelHeightTiles - 4][70] = 2;
+levelLayout[levelHeightTiles - 4][71] = 2;
+levelLayout[levelHeightTiles - 4][72] = 2;
+levelLayout[levelHeightTiles - 5][71] = 2;
+
+// Longer platform
 for (let i = 0; i < 10; i++) {
-    levelLayout[levelHeightTiles - 6][100 + i] = 2;
+    levelLayout[levelHeightTiles - 6][85 + i] = 2;
 }
-for (let i = 0; i < 8; i++) {
-    levelLayout[levelHeightTiles - 9][130 + i] = 2;
-}
-for (let i = 0; i < 6; i++) {
-    levelLayout[levelHeightTiles - 12][160 + i] = 2;
-}
-// Added platforms
-for (let i = 0; i < 8; i++) {
-    levelLayout[levelHeightTiles - 15][190 + i] = 2;
-}
-for (let i = 0; i < 10; i++) {
-    levelLayout[levelHeightTiles - 18][220 + i] = 2;
-}
+
+// A few single blocks
+levelLayout[levelHeightTiles - 5][100] = 2;
+levelLayout[levelHeightTiles - 5][105] = 2;
+levelLayout[levelHeightTiles - 5][110] = 2;
+
 
 const levelConfig = {
     layout: levelLayout,
@@ -57,10 +57,10 @@ const levelConfig = {
         4: 'tile_pipe_top'
     },
     enemies: [
-        { x: 300, y: 225, type: 'enemy_guard', name: 'guard' },
-        { x: 525, y: 150, type: 'enemy_guard', name: 'guard' },
-        { x: 825, y: 225, type: 'enemy_rat', name: 'rat' },
-        { x: 900, y: 225, type: 'enemy_rat', name: 'rat' }
+        { x: 22 * 32, y: (levelHeightTiles - 7) * 32, type: 'enemy_guard', name: 'guard' },
+        { x: 40 * 32, y: (levelHeightTiles - 10) * 32, type: 'enemy_guard', name: 'guard' },
+        { x: 90 * 32, y: (levelHeightTiles - 8) * 32, type: 'enemy_rat', name: 'rat' },
+        { x: 92 * 32, y: (levelHeightTiles - 8) * 32, type: 'enemy_rat', name: 'rat' }
     ],
     NPCs: []
 };
