@@ -90,16 +90,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.upKey.on('down', () => this.moveSelection(-this.cols), this);
         this.downKey.on('down', () => this.moveSelection(this.cols), this);
 
-        // Add Clear button
-        const { width, height } = this.sys.game.config;
-        this.clearButton = this.add.text(width / 2, height - 100, 'Clear', {
-            fontSize: '32px',
-            fill: '#fff',
-            backgroundColor: '#333',
-            padding: { left: 15, right: 15, top: 10, bottom: 10 }
-        }).setOrigin(0.5).setInteractive().setVisible(false);
-
-        this.clearButton.on('pointerdown', () => this.clearSelection());
+        // The clear button was here
 
         // Add disclaimer at the bottom
         this.add.text(width / 2, height - 40, '*Paga 1 BTC para desbloquear este personaje.', { fontSize: '14px', fill: '#ff0000', fontFamily: 'Arial' }).setOrigin(0.5);
@@ -135,7 +126,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
             const selectedSprite = this.characterSprites[this.selectedCharacterIndex];
             this.selectedText = this.add.text(selectedSprite.x, selectedSprite.y + 120, 'Selected!', { fontSize: '24px', fill: '#0f0' }).setOrigin(0.5);
         }
-        this.clearButton.setVisible(true);
+        // this.clearButton.setVisible(true);
 
         // Disable movement keys
         this.leftKey.enabled = false;
@@ -150,18 +141,4 @@ export default class CharacterSelectScene extends Phaser.Scene {
         });
     }
 
-    clearSelection() {
-        if (this.selectedText) {
-            this.selectedText.destroy();
-            this.selectedText = null;
-        }
-        this.clearButton.setVisible(false);
-
-        // Re-enable movement keys
-        this.leftKey.enabled = true;
-        this.rightKey.enabled = true;
-        this.upKey.enabled = true;
-        this.downKey.enabled = true;
-        this.enterKey.enabled = true;
-    }
 }
