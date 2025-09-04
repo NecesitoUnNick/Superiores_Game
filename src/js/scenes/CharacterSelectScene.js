@@ -22,7 +22,7 @@ export default class CharacterSelectScene extends Phaser.Scene {
         this.load.image('black_bg', 'assets/images/ui/black_bg.png');
 
         const animations = [
-            'idle'//, 'move_forward', 'move_backward', 'jump', 'throw_power', 'lose_life'
+            'idle', 'move_forward', 'move_backward', 'jump', 'throw_power', 'lose_life'
         ];
 
         this.characters.forEach(char => {

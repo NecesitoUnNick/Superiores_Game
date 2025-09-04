@@ -75,7 +75,7 @@ export default class GameScene extends Phaser.Scene {
         });
 
         const playerStartX = 100;
-        const playerStartY = (this.levelConfig.height - 3) * this.TILE_SIZE;
+        const playerStartY = (this.levelConfig.height - 2) * this.TILE_SIZE - (48/2);
 
         this.player = new Player(this, playerStartX, playerStartY, this.character, this.characterTexture);
         this.physics.add.collider(this.player, this.platforms);
