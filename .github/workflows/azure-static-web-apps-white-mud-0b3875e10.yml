@@ -38,7 +38,7 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_WHITE_MUD_0B3875E10 }}
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
+          ###### Repository/Build Configurations - These values can be configured to match your app requirements. Actualizamos acá para que despliegue bien######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/src" # App source code path - Va Vacío
           api_location: "" # Api source code path - optional
