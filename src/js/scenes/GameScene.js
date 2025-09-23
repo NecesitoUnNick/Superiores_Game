@@ -2,6 +2,7 @@ import Player from '../entities/Player.js';
 import Enemy from '../entities/Enemy.js';
 import Projectile from '../entities/Projectile.js';
 import levelConfig from '../levels/level1.js';
+import inputState from '../utils/inputState.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -122,17 +123,110 @@ export default class GameScene extends Phaser.Scene {
             this.scene.start('MenuScene');
         });
 
-        // Control validation:
-        // The controls for movement, jump, and power are handled in the Player.js class.
-        // The Player.js file contains console.log statements that are triggered on input,
-        // which is sufficient for validating that the controls are being registered correctly.
-        // No changes were needed for the control logic.
+        this.initializeControls();
+    }
+
+    initializeControls() {
+        // Touch controls
+        const btnLeft = document.getElementById('btn-left');
+        const btnRight = document.getElementById('btn-right');
+        const btnJump = document.getElementById('btn-jump');
+        const btnPower = document.getElementById('btn-power');
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+
+        const preventDefaults = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+
+        const setInput = (key, value) => {
+            inputState[key] = value;
+        };
+
+        // Left
+        btnLeft.addEventListener('touchstart', (e) => { preventDefaults(e); setInput('left', true); });
+        btnLeft.addEventListener('touchend', (e) => { preventDefaults(e); setInput('left', false); });
+        btnLeft.addEventListener('mousedown', (e) => { preventDefaults(e); setInput('left', true); });
+        btnLeft.addEventListener('mouseup', (e) => { preventDefaults(e); setInput('left', false); });
+
+        // Right
+        btnRight.addEventListener('touchstart', (e) => { preventDefaults(e); setInput('right', true); });
+        btnRight.addEventListener('touchend', (e) => { preventDefaults(e); setInput('right', false); });
+        btnRight.addEventListener('mousedown', (e) => { preventDefaults(e); setInput('right', true); });
+        btnRight.addEventListener('mouseup', (e) => { preventDefaults(e); setInput('right', false); });
+
+        // Jump
+        btnJump.addEventListener('touchstart', (e) => { preventDefaults(e); setInput('jump', true); });
+        btnJump.addEventListener('touchend', (e) => { preventDefaults(e); setInput('jump', false); });
+        btnJump.addEventListener('mousedown', (e) => { preventDefaults(e); setInput('jump', true); });
+        btnJump.addEventListener('mouseup', (e) => { preventDefaults(e); setInput('jump', false); });
+
+        // Power
+        btnPower.addEventListener('touchstart', (e) => { preventDefaults(e); setInput('power', true); });
+        btnPower.addEventListener('touchend', (e) => { preventDefaults(e); setInput('power', false); });
+        btnPower.addEventListener('mousedown', (e) => { preventDefaults(e); setInput('power', true); });
+        btnPower.addEventListener('mouseup', (e) => { preventDefaults(e); setInput('power', false); });
+
+        // Up (for consistency, maps to jump as well)
+        btnUp.addEventListener('touchstart', (e) => { preventDefaults(e); setInput('jump', true); });
+        btnUp.addEventListener('touchend', (e) => { preventDefaults(e); setInput('jump', false); });
+        btnUp.addEventListener('mousedown', (e) => { preventDefaults(e); setInput('jump', true); });
+        btnUp.addEventListener('mouseup', (e) => { preventDefaults(e); setInput('jump', false); });
+
+        // Down
+        btnDown.addEventListener('touchstart', (e) => { preventDefaults(e); setInput('down', true); });
+        btnDown.addEventListener('touchend', (e) => { preventDefaults(e); setInput('down', false); });
+        btnDown.addEventListener('mousedown', (e) => { preventDefaults(e); setInput('down', true); });
+        btnDown.addEventListener('mouseup', (e) => { preventDefaults(e); setInput('down', false); });
+
+
+        // Keyboard controls
+        this.input.keyboard.on('keydown', (e) => {
+            switch (e.key) {
+                case 'ArrowLeft':
+                case 'a':
+                    setInput('left', true);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                    setInput('right', true);
+                    break;
+                case 'ArrowUp':
+                case 'w':
+                case ' ': // Space for jump
+                    setInput('jump', true);
+                    break;
+                case 'p': // P for power
+                    setInput('power', true);
+                    break;
+            }
+        });
+
+        this.input.keyboard.on('keyup', (e) => {
+            switch (e.key) {
+                case 'ArrowLeft':
+                case 'a':
+                    setInput('left', false);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                    setInput('right', false);
+                    break;
+                case 'ArrowUp':
+                case 'w':
+                case ' ': // Space for jump
+                    setInput('jump', false);
+                    break;
+                case 'p': // P for power
+                    setInput('power', false);
+                    break;
+            }
+        });
     }
 
     update(time, delta) {
-        console.log('GameScene update loop running.'); // Debug log
         if (this.player.active) {
-            console.log('Player update called.'); // Debug log
             this.player.update(time, delta);
             this.scoreText.setText(`Puntaje: ${this.score}`); // Corrected translation
 

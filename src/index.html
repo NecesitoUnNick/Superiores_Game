@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Superiores: Escapando de la Prisión Inferior</title>
     <link rel="stylesheet" href="css/styles.css">
     <style>
@@ -13,5 +13,18 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
     <script type="module" src="js/game.js"></script>
+
+    <div id="touch-controls">
+        <div class="d-pad">
+            <button id="btn-up" class="control-button arrow">↑</button>
+            <button id="btn-left" class="control-button arrow">←</button>
+            <button id="btn-right" class="control-button arrow">→</button>
+            <button id="btn-down" class="control-button arrow">↓</button>
+        </div>
+        <div class="action-buttons">
+            <button id="btn-power" class="control-button action">Poder</button>
+            <button id="btn-jump" class="control-button action">Salto</button>
+        </div>
+    </div>
 </body>
 </html>
