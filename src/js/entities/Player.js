@@ -1,4 +1,4 @@
-import controls from '../utils/controls.js';
+import inputState from '../utils/inputState.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, character, textureKey) {
@@ -17,13 +17,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setCollideWorldBounds(true);
         this.setBounce(0.1);
         this.body.setSize(32, 48);
-
-        // Setup controls
-        this.keys = {};
-        for (const action in controls) {
-            this.keys[action] = controls[action].map(key => this.scene.input.keyboard.addKey(key));
-            console.log('Key mapped for action', action, ':', this.keys[action].map(k => k.keyCode)); // Debug log
-        }
 
         // Define animations
         const baseKey = textureKey.replace('player_', ''); // e.g., 'el_abogado'
@@ -91,62 +84,49 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    // Helper to check if any key for an action is down
-    isActionDown(action) {
-        return this.keys[action].some(key => key.isDown);
-    }
-
-    // Helper to check if an action was just pressed
-    isActionJustDown(action) {
-        return this.keys[action].some(key => Phaser.Input.Keyboard.JustDown(key));
-    }
-
     update(time, delta) {
         const onGround = this.body.touching.down;
 
         // Movement
-        if (this.isActionDown('right')) {
-            console.log('Right action down'); // Debug log
+        if (inputState.right) {
             this.setVelocityX(this.stats.speed);
             this.facing = 'right';
             this.flipX = false;
-            this.play('move_forward', true); // Play move forward animation
+            if(onGround) this.play('move_forward', true);
+        } else if (inputState.left) {
+            this.setVelocityX(-this.stats.speed);
+            this.facing = 'left';
+            this.flipX = true; // Flip sprite to face left
+            if(onGround) this.play('move_backward', true);
         } else {
             this.setVelocityX(0);
             if (onGround) {
-                this.play('idle', true); // Play idle animation if on ground and not moving
+                this.play('idle', true);
             }
         }
 
         // Jumping
-        if (this.isActionDown('jump') && onGround) {
-            console.log('Jump action down'); // Debug log
+        if (inputState.jump && onGround) {
             this.setVelocityY(-this.stats.jump);
-            this.play('jump', true); // Play jump animation
+            this.play('jump', true);
         }
 
         // Power-up / Firing
-        if (this.isActionDown('power') && time > this.lastFired) {
-            console.log('Power action down'); // Debug log
+        if (inputState.power && time > this.lastFired) {
             this.scene.fireProjectile(this.x, this.y, this.facing);
             this.lastFired = time + this.stats.fireRate;
-            this.play('throw_power', true); // Play throw power animation
+            this.play('throw_power', true);
+
+            // After throwing, decide which animation to return to
             this.once('animationcomplete-throw_power', () => {
-                if (!this.body.velocity.x && onGround) { // If not moving and on ground, go back to idle
+                if (!this.body.velocity.x && onGround) {
                     this.play('idle', true);
-                } else if (!this.body.velocity.x && !onGround) { // If not moving and in air, stay in jump
-                    this.play('jump', true);
-                } else if (this.body.velocity.x && onGround) { // If moving and on ground, go back to move
+                } else if (this.body.velocity.x && onGround) {
                     this.play(this.facing === 'left' ? 'move_backward' : 'move_forward', true);
+                } else if (!onGround) {
+                     this.play('jump', true);
                 }
             });
         }
-
-        // Handle lose life animation (assuming a method in GameScene will call this)
-        // This part will be triggered externally, e.g., by handlePlayerEnemyCollision
-        // For now, just a placeholder.
-        // if (this.isLosingLife) { // This would be a flag set by GameScene
-        //     this.play('lose_life', true);
-        // }
     }
 }

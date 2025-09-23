@@ -6,10 +6,13 @@ import GameScene from './scenes/GameScene.js';
 // Game configuration
 const config = {
     type: Phaser.AUTO,
-    width: 1024,
-    height: 768,
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 1024,
+        height: 768,
+    },
     pixelArt: true,
-    zoom: 1, // Scale up the game - changed from 3 to 1 because of new resolution
     backgroundColor: '#1a1a1a',
     physics: {
         default: 'arcade',
