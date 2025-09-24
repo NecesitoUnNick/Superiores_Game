@@ -7,10 +7,13 @@ import GameScene from './scenes/GameScene.js';
 const config = {
     type: Phaser.AUTO,
     scale: {
-        mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 1024,
-        height: 768,
+        mode: Phaser.Scale.RESIZE,
+        parent: 'game-container',
+        width: 1280,
+        height: 720,
+    },
+    dom: {
+        createContainer: true
     },
     pixelArt: true,
     backgroundColor: '#1a1a1a',
