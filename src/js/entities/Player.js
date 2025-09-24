@@ -88,27 +88,32 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     update(time, delta) {
         const onGround = this.body.touching.down;
 
-        // Movement
+        // Horizontal Movement
         if (inputState.right) {
             this.setVelocityX(this.stats.speed);
             this.facing = 'right';
             this.flipX = false;
-            if(onGround) this.play('move_forward', true);
         } else if (inputState.left) {
             this.setVelocityX(-this.stats.speed);
             this.facing = 'left';
-            this.flipX = true; // Flip sprite to face left
-            if(onGround) this.play('move_backward', true);
+            this.flipX = true;
         } else {
             this.setVelocityX(0);
-            if (onGround) {
-                this.play('idle', true);
-            }
         }
 
         // Jumping
         if (inputState.jump && onGround) {
             this.setVelocityY(-this.stats.jump);
+        }
+
+        // Animations
+        if (onGround) {
+            if (this.body.velocity.x !== 0) {
+                this.play(this.facing === 'left' ? 'move_backward' : 'move_forward', true);
+            } else {
+                this.play('idle', true);
+            }
+        } else {
             this.play('jump', true);
         }
 
@@ -117,17 +122,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.scene.fireProjectile(this.x, this.y, this.facing);
             this.lastFired = time + this.stats.fireRate;
             this.play('throw_power', true);
-
-            // After throwing, decide which animation to return to
-            this.once('animationcomplete-throw_power', () => {
-                if (!this.body.velocity.x && onGround) {
-                    this.play('idle', true);
-                } else if (this.body.velocity.x && onGround) {
-                    this.play(this.facing === 'left' ? 'move_backward' : 'move_forward', true);
-                } else if (!onGround) {
-                     this.play('jump', true);
-                }
-            });
         }
     }
 }
