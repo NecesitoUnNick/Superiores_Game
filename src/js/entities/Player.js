@@ -20,45 +20,44 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.body.setSize(32, 48);
 
         // Define animations
-        const baseKey = textureKey.replace('player_', ''); // e.g., 'el_abogado'
         this.anims.create({
-            key: 'idle',
-            frames: this.anims.generateFrameNumbers(`player_${baseKey}_idle`, { start: 0, end: 3 }), // Assuming 4 frames for idle
+            key: `${textureKey}_idle`,
+            frames: this.anims.generateFrameNumbers(`${textureKey}_idle`, { start: 0, end: 3 }),
             frameRate: 8,
             repeat: -1
         });
         this.anims.create({
-            key: 'move_forward',
-            frames: this.anims.generateFrameNumbers(`player_${baseKey}_move_forward`, { start: 0, end: 7 }), // Assuming 8 frames for move
+            key: `${textureKey}_move_forward`,
+            frames: this.anims.generateFrameNumbers(`${textureKey}_move_forward`, { start: 0, end: 7 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
-            key: 'move_backward',
-            frames: this.anims.generateFrameNumbers(`player_${baseKey}_move_backward`, { start: 0, end: 7 }), // Assuming 8 frames for move
+            key: `${textureKey}_move_backward`,
+            frames: this.anims.generateFrameNumbers(`${textureKey}_move_backward`, { start: 0, end: 7 }),
             frameRate: 10,
             repeat: -1
         });
         this.anims.create({
-            key: 'jump',
-            frames: this.anims.generateFrameNumbers(`player_${baseKey}_jump`, { start: 0, end: 0 }), // Assuming single frame for jump
+            key: `${textureKey}_jump`,
+            frames: this.anims.generateFrameNumbers(`${textureKey}_jump`, { start: 0, end: 0 }),
             frameRate: 1,
             repeat: 0
         });
         this.anims.create({
-            key: 'throw_power',
-            frames: this.anims.generateFrameNumbers(`player_${baseKey}_throw_power`, { start: 0, end: 2 }), // Assuming 3 frames for throw
+            key: `${textureKey}_throw_power`,
+            frames: this.anims.generateFrameNumbers(`${textureKey}_throw_power`, { start: 0, end: 2 }),
             frameRate: 10,
             repeat: 0
         });
         this.anims.create({
-            key: 'lose_life',
-            frames: this.anims.generateFrameNumbers(`player_${baseKey}_lose_life`, { start: 0, end: 4 }), // Assuming 5 frames for lose life
+            key: `${textureKey}_lose_life`,
+            frames: this.anims.generateFrameNumbers(`${textureKey}_lose_life`, { start: 0, end: 4 }),
             frameRate: 8,
             repeat: 0
         });
 
-        this.play('idle'); // Start with idle animation
+        this.play(`${textureKey}_idle`); // Start with idle animation
     }
 
     getCharacterStats() {
@@ -109,19 +108,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Animations
         if (onGround) {
             if (this.body.velocity.x !== 0) {
-                this.play(this.facing === 'left' ? 'move_backward' : 'move_forward', true);
+                this.play(this.facing === 'left' ? `${this.texture.key}_move_backward` : `${this.texture.key}_move_forward`, true);
             } else {
-                this.play('idle', true);
+                this.play(`${this.texture.key}_idle`, true);
             }
         } else {
-            this.play('jump', true);
+            this.play(`${this.texture.key}_jump`, true);
         }
 
         // Power-up / Firing
         if (inputState.power && time > this.lastFired) {
             this.scene.fireProjectile(this.x, this.y, this.facing);
             this.lastFired = time + this.stats.fireRate;
-            this.play('throw_power', true);
+            this.play(`${this.texture.key}_throw_power`, true);
         }
     }
 }
