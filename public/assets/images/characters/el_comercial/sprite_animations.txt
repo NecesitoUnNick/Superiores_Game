@@ -1,0 +1,6 @@
+This file describes the idle animation spritesheet for El Comercial. It should be a PNG spritesheet, 16x16 pixels per frame, with multiple frames for an idle animation.
+This file describes the move forward animation spritesheet for El Comercial. It should be a PNG spritesheet, 16x16 pixels per frame, with multiple frames for a walking/running forward animation.
+This file describes the move backward animation spritesheet for El Comercial. It should be a PNG spritesheet, 16x16 pixels per frame, with multiple frames for a walking/running backward animation.
+This file describes the jump animation spritesheet for El Comercial. It should be a PNG spritesheet, 16x16 pixels per frame, with multiple frames for a jumping animation.
+This file describes the throw power animation spritesheet for El Comercial. It should be a PNG spritesheet, 16x16 pixels per frame, with multiple frames for a power throwing animation.
+This file describes the lose life animation spritesheet for El Comercial. It should be a PNG spritesheet, 16x16 pixels per frame, with multiple frames for a losing life animation.

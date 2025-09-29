@@ -1,0 +1,1 @@
+This file describes the initial background image. It should be a JPG or PNG, 320x240 pixels, representing a dark, mysterious environment.

@@ -1,0 +1,1 @@
+This file describes the sprite for 'Rat'. It should be a PNG spritesheet, 16x16 pixels per frame, with animations for idle and walk. The enemy should be a rat-like figure.

@@ -1,0 +1,1 @@
+This file describes the black background image for character selection. It should be a PNG, 320x240 pixels, completely black.
