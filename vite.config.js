@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite';
 import path from 'path';
+import { componentTagger } from "lovable-tagger";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: './',
   publicDir: 'public',
   build: {
@@ -14,13 +15,17 @@ export default defineConfig({
       }
     }
   },
+  plugins: [
+    mode === 'development' && componentTagger(),
+  ].filter(Boolean),
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')
     }
   },
   server: {
+    host: "::",
     port: 8080,
     open: true
   }
-});
+}));
