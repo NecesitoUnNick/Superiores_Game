@@ -5,6 +5,7 @@
     "type": "module",
     "scripts": {
         "start": "node server.js",
+        "postbuild": "echo 'Build complete, starting server...'",
         "dev": "vite",
         "build": "vite build",
         "build:dev": "vite build --mode development",

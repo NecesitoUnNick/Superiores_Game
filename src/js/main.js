@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 // Import scenes
 import MenuScene from './scenes/MenuScene.js';
 import CharacterSelectScene from './scenes/CharacterSelectScene.js';
